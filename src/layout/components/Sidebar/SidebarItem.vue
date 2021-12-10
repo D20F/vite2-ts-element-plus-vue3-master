@@ -90,15 +90,49 @@ let resolvePath = (routePath: string) => {
 </script>
 
 <style lang="scss">
-// menu hover
-/* .submenu-title-noDropdown,
-  .el-submenu__title {
-    &:hover {
-      background-color: $menuHover !important;
-    }
-  }
+$menuText: #bfcbd9;
+$menuActiveText: #409eff;
+$subMenuActiveText: #f4f4f5;
+$menuBg: #001321;
+$menuHover: #000a13;
+$subMenuBg: #000a13;
+$subMenuHover: #1890ff;
 
-  .is-active>.el-submenu__title {
-    color: $subMenuActiveText !important;
-  }*/
+submenu-title-noDropdown,
+.el-submenu__title {
+  &:hover {
+    background-color: $menuHover !important;
+  }
+}
+
+.is-active > .el-submenu__title {
+  color: $subMenuActiveText !important;
+}
+
+.el-sub-menu > .el-submenu__title,
+.el-menu-item {
+  &:hover {
+    // you can use $subMenuHover
+    background-color: $menuHover !important;
+  }
+}
+
+.el-sub-menu .el-submenu__title {
+  &:hover {
+    background-color: $menuHover !important;
+  }
+}
+
+.el-sub-menu > .el-submenu__title {
+  color: $subMenuActiveText !important;
+}
+
+.el-sub-menu > .el-submenu__title,
+.el-sub-menu .el-menu-item {
+  min-width: $sideBarWidth !important;
+  background-color: $subMenuBg !important;
+  &:hover {
+    background-color: $subMenuHover !important;
+  }
+}
 </style>

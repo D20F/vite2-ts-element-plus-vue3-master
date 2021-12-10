@@ -19,16 +19,18 @@
                     @click="
                         headerForm = {
                             name: '',
-                            grounp: '',
+                            grounp: ''
                         }
                     "
                     type="primary"
-                >全部</el-button>
+                >
+                    全部
+                </el-button>
             </el-form-item>
         </el-form>
 
         <el-button type="primary" @click="dialogFormVisible = true">新增人员</el-button>
-        <el-table :data="tableData" v-loading="tableDataLoading" style="width: 100%;margin-top:30px" border >
+        <el-table :data="tableData" v-loading="tableDataLoading" style="width: 100%; margin-top: 30px" border>
             <el-table-column prop="username" label="账号" width="180" />
             <el-table-column prop="name" label="姓名" width="180" />
             <el-table-column prop="adminRole.roleName" label="用户组" width="180" />
@@ -38,9 +40,9 @@
                     <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-tooltip
                         class="item"
-                        effect="dark"
-                        content="重置密码为 123456"
-                        placement="top"
+                        :effect="'dark'"
+                        :content="'重置密码为 123456'"
+                        :placement="'top'"
                         style="margin: 0 10px"
                     >
                         <el-popconfirm
@@ -85,20 +87,10 @@
                     <el-input v-model="form.username" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" label-width="70px">
-                    <el-input
-                        type="password"
-                        v-model="form.password"
-                        autocomplete="off"
-                        minlength="6"
-                    ></el-input>
+                    <el-input type="password" v-model="form.password" autocomplete="off" minlength="6"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" label-width="70px">
-                    <el-input
-                        type="password"
-                        v-model="form.passwords"
-                        autocomplete="off"
-                        minlength="6"
-                    ></el-input>
+                    <el-input type="password" v-model="form.passwords" autocomplete="off" minlength="6"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" label-width="70px">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -135,20 +127,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs, reactive, onBeforeMount, getCurrentInstance, onMounted, ref, watch } from 'vue';
+import { computed, toRefs, reactive, onBeforeMount, getCurrentInstance, onMounted, ref, watch } from 'vue'
 import {
     adminRoleAllA,
     adminUserPageA,
     adminUserModifyS,
     adminUserPasswordResetS,
     adminUserDeleteS,
-    adminUserAddS,
-} from "@/api/authority";
+    adminUserAddS
+} from '@/api/authority'
 let { proxy }: any = getCurrentInstance()
 let state = reactive({
     headerForm: {
-        name: "",
-        grounp: "",
+        name: '',
+        grounp: ''
     },
     tableCacheData: [],
     dialogFormVisible: false,
@@ -156,159 +148,150 @@ let state = reactive({
 
     dialogFormEdit: false,
     form: {
-        name: "",
-        password: "",
+        name: '',
+        password: '',
         roleId: 0,
-        username: "",
-        passwords: "",
-        roleName: "",
+        username: '',
+        passwords: '',
+        roleName: ''
     },
     formEdit: {
-        roleName: "",
-        name: "",
-        id: "",
-        roleId: "",
+        roleName: '',
+        name: '',
+        id: '',
+        roleId: ''
     },
     grounp: [],
     page: {
         total: 0,
         page: 1,
-        pageSize: 10,
-    },
-
+        pageSize: 10
+    }
 })
 const handleSizeChange = (v) => {
     console.log(v)
 }
 let tableData = computed(() => {
     let data = state.tableCacheData
-    data = state.tableCacheData.filter((data) =>
-        !state.headerForm.name ||
-        data.name
-            .toLowerCase()
-            .includes(state.headerForm.name.toLowerCase())
+    data = state.tableCacheData.filter(
+        (data) => !state.headerForm.name || data.name.toLowerCase().includes(state.headerForm.name.toLowerCase())
     )
-    data = data.filter((data) =>
-        data.adminRole.roleName
-            .toLowerCase()
-            .includes(state.headerForm.grounp.toLowerCase())
-    )
-    return data;
-});
+    data = data.filter((data) => data.adminRole.roleName.toLowerCase().includes(state.headerForm.grounp.toLowerCase()))
+    return data
+})
 
 onMounted(() => {
-    adminRoleAllAS();
-    adminUserPageS();
-});
+    adminRoleAllAS()
+    adminUserPageS()
+})
 
 const adminRoleAllAS = () => {
     adminRoleAllA({}).then((res: any) => {
-        let arr = [];
+        let arr = []
         for (const item of res.data) {
             arr.push({
                 label: item.roleName,
-                value: item.id,
-            });
+                value: item.id
+            })
         }
-        state.grounp = arr;
-    });
+        state.grounp = arr
+    })
 }
 const adminUserPageS = () => {
     let data = {
         current: state.page.page,
-        size: state.page.pageSize,
-    };
+        size: state.page.pageSize
+    }
     adminUserPageA(data).then((res: any) => {
-        state.tableCacheData = res.records;
-        state.page.total = res.total;
-        state.tableDataLoading = false;
-    });
+        state.tableCacheData = res.records
+        state.page.total = res.total
+        state.tableDataLoading = false
+    })
 }
 const EditUser = () => {
     let data = {
         name: state.formEdit.name,
-        roleId: state.formEdit.roleId,
-    };
+        roleId: state.formEdit.roleId
+    }
     adminUserModifyS(state.formEdit.id, data).then((res) => {
         proxy.$message({
-            message: "修改用户成功",
-            type: "success",
-        });
-        state.dialogFormEdit = false;
-    });
+            message: '修改用户成功',
+            type: 'success'
+        })
+        state.dialogFormEdit = false
+    })
 }
 const dialogClose = () => {
-    adminUserPageS();
+    adminUserPageS()
     state.form = {
-        name: "",
-        password: "",
+        name: '',
+        password: '',
         roleId: 0,
-        username: "",
-        passwords: "",
-        roleName: "",
-    };
+        username: '',
+        passwords: '',
+        roleName: ''
+    }
 }
 const EditSelect = (data: any) => {
-    state.formEdit.roleId = data;
+    state.formEdit.roleId = data
 }
 const addSelect = (data: any) => {
-    state.form.roleId = data;
+    state.form.roleId = data
 }
 const handleEdit = (row: any) => {
-    state.dialogFormEdit = true;
+    state.dialogFormEdit = true
     state.formEdit = {
         roleName: row.adminRole.roleName,
         name: row.name,
         id: row.id,
-        roleId: row.roleId,
-    };
+        roleId: row.roleId
+    }
 }
 const handleDelete = (row: any) => {
     adminUserDeleteS(row).then((res) => {
         proxy.$message({
-            message: "删除用户成功",
-            type: "success",
-        });
-        adminUserPageS();
-    });
+            message: '删除用户成功',
+            type: 'success'
+        })
+        adminUserPageS()
+    })
 }
 const handleRest = (row: any) => {
     console.log(row)
     adminUserPasswordResetS(row).then((res: any) => {
         proxy.$message({
-            message: "重置用户密码成功",
-            type: "success",
-        });
-    });
+            message: '重置用户密码成功',
+            type: 'success'
+        })
+    })
 }
 const confirm = () => {
     if (state.form.password !== state.form.passwords) {
         proxy.$message({
-            message: "用户密码错误",
-            type: "error",
-        });
+            message: '用户密码错误',
+            type: 'error'
+        })
     }
     let data = {
         name: state.form.name,
         roleId: state.form.roleId,
         password: state.form.password,
-        username: state.form.username,
-    };
+        username: state.form.username
+    }
     adminUserAddS(data).then((res: any) => {
         proxy.$message({
-            message: "创建用户成功",
-            type: "success",
-        });
-        state.dialogFormVisible = false;
-    });
+            message: '创建用户成功',
+            type: 'success'
+        })
+        state.dialogFormVisible = false
+    })
 }
 const currentChange = (v: any) => {
-    state.page.page = v;
-    adminUserPageS();
-
+    state.page.page = v
+    adminUserPageS()
 }
-let { page, grounp, formEdit, form, dialogFormEdit, tableDataLoading, dialogFormVisible, tableCacheData, headerForm } = toRefs(state)
+let { page, grounp, formEdit, form, dialogFormEdit, tableDataLoading, dialogFormVisible, tableCacheData, headerForm } =
+    toRefs(state)
 </script>
 <style lang="sss" scoped>
-
 </style>
